@@ -141,6 +141,92 @@ Status ListDelete(LinkList *L, int i, ElemType *e)
     return OK;
 }
 
+/*
+单链表的整表创建
+算法思路：
+1.声明一指针p和计数器变量i；
+2.初始化一空链表L(分配存储空间)；
+3.让L的头结点的指针指向NULL，即建立一个带头结点的单链表；
+4.循环：
+(1)生成一新结点赋值给p；
+(2)随机生成一数字赋值给p的数据域p->data；
+(3)将p插入到头结点与前一新结点之间(或终端结点的后面)。
+*/
+/*随机产生n个元素的值，建立带表头结点的单链线性表L(头插法)CreateListHead()*/
+void CreateListHead(LinkList *L, int n)
+{
+    LinkList p;
+    int i;
+    //初始化随机数种子（time(0)是以当前时刻为参数进行初始化）
+    srand(time(0));
+    *L = (LinkList)malloc(sizeof(Node));
+    //先建立一个带头结点的单链表
+    (*L)->next = NULL;
+    for (i = 0; i < n; i++)
+    {
+        //生成新结点
+        p = (LinkList)malloc(sizeof(Node));
+        //随机生成100以内的数字
+        p->data = rand() % 100 + 1;
+        //插入到表头
+        p->next = (*L)->next;
+        (*L)->next = p;
+    }
+}
+
+/*随机产生n个元素的值，建立带表头结点的单链线性表L(尾插法)CreateListTail()*/
+void CreateListTail(LinkList *L, int n)
+{
+    LinkList p, r;
+    int i;
+    //初始化随机数种子
+    srand(time(0));
+    //为整个线性表
+    *L = (LinkList)malloc(sizeof(Node));
+    //r为指向尾部的结点
+    r = *L;
+    for (i = 0; i < n; i++)
+    {
+        //生成新结点
+        p = (LinkList)malloc(sizeof(Node));
+        //随机生成100以内的数字
+        p->data = rand() % 100 + 1;
+        //将表尾终端结点的指针指向新结点
+        r->next = p;
+        //将当前新结点定义为表尾终端结点
+        r = p;
+    }
+    //表示当前链表结束
+    r->next = NULL;
+}
+
+/*
+单链表的整表删除ClearList()
+算法思路：
+1.声明一结点p、q；
+2.将第一个结点赋值给p；
+3.循环：
+(1)将下一结点赋值给p；
+(2)释放p；
+(3)将q赋值给p。
+*/
+Status ClearList(LinkList *L)
+{
+    LinkList p, q;
+    //p指向第一个结点
+    p = (*L)->next;
+    //没到表尾
+    while (p)
+    {
+        q = p->next;
+        free(p);
+        p = q;
+    }
+    //头结点指针域为空
+    (*L)->next = NULL;
+    return OK;
+}
+
 int main()
 {
     LinkList l;
